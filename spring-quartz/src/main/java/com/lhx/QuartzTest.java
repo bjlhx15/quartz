@@ -36,7 +36,7 @@ public class QuartzTest {
 			// 2、创建Trigger
 			SimpleScheduleBuilder builder = SimpleScheduleBuilder.simpleSchedule()
 					// 设置执行次数
-					.repeatSecondlyForTotalCount(10);
+					.repeatSecondlyForTotalCount(100);
 			Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1_1", "tGroup1").startNow()
 					.withSchedule(builder).build();
 			// 3、创建Scheduler

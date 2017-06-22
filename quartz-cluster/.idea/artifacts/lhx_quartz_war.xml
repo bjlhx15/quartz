@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="lhx-quartz:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="lhx-quartz-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="lhx-quartz:war exploded" />
+    </root>
+  </artifact>
+</component>

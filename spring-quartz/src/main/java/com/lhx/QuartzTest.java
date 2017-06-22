@@ -1,6 +1,5 @@
 package com.lhx;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.quartz.JobBuilder;
@@ -8,29 +7,25 @@ import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
-import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class QuartzTest {
-
-	private static SchedulerFactory sf = new StdSchedulerFactory();
+	@Autowired
+	private Scheduler scheduler;
 	private static String JOB_GROUP_NAME = "ddlib";
 	private static String TRIGGER_GROUP_NAME = "ddlibTrigger";
-
-	public static void main(String[] args) throws SchedulerException, ParseException {
-		startSchedule();
-		//resumeJob();
-	}
 
 	/**
 	 * 开始一个simpleSchedule()调度
 	 */
-	public static void startSchedule() {
+	public void startSchedule() {
 		try {
 			// 1、创建一个JobDetail实例，指定Quartz
 			JobDetail jobDetail = JobBuilder.newJob(MyJob.class)
@@ -41,11 +36,10 @@ public class QuartzTest {
 			// 2、创建Trigger
 			SimpleScheduleBuilder builder = SimpleScheduleBuilder.simpleSchedule()
 					// 设置执行次数
-					.repeatSecondlyForTotalCount(100);
+					.repeatSecondlyForTotalCount(10);
 			Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1_1", "tGroup1").startNow()
 					.withSchedule(builder).build();
 			// 3、创建Scheduler
-			Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 			scheduler.start();
 			// 4、调度执行
 			scheduler.scheduleJob(jobDetail, trigger);
@@ -65,11 +59,8 @@ public class QuartzTest {
 	/**
 	 * 从数据库中找到已经存在的job，并重新开户调度
 	 */
-	public static void resumeJob() {
+	public void resumeJob() {
 		try {
-
-			SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-			Scheduler scheduler = schedulerFactory.getScheduler();
 			// ①获取调度器中所有的触发器组
 			List<String> triggerGroups = scheduler.getTriggerGroupNames();
 			// ②重新恢复在tgroup1组中，名为trigger1_1触发器的运行
